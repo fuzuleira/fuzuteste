@@ -1,8 +1,9 @@
+import { getInsight } from "@/quiz/insights";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { questions, TOTAL_QUESTIONS } from "@/quiz/questions";
 import { getProfile, isComplete, type Answers } from "@/quiz/scoring";
-import { exitPromptShown, loadAnswers, markExitPromptShown, saveAnswers } from "@/quiz/state";
+import { loadAnswers, saveAnswers } from "@/quiz/state";
 import { track } from "@/lib/analytics";
 import { QuizIntro } from "./QuizIntro";
 import { QuizProgress } from "./QuizProgress";
@@ -10,7 +11,6 @@ import { QuizQuestion } from "./QuizQuestion";
 import { QuizInsight } from "./QuizInsight";
 import { QuizProcessing } from "./QuizProcessing";
 import { QuizResult } from "./QuizResult";
-import { ExitPrompt } from "./ExitPrompt";
 
 export type Etapa = "inicio" | "p1" | "p2" | "p3" | "p4" | "p5" | "p6" | "p7" | "resultado";
 const qEtapa = (n: number) => `p${n}` as Etapa;
@@ -27,7 +27,7 @@ export function Funnel({ etapa }: { etapa: Etapa }) {
   const [locked, setLocked] = useState(false);
   const [insight, setInsight] = useState<{ text: string; index: number; next: Etapa } | null>(null);
   const [processing, setProcessing] = useState(false);
-  const [exitOpen, setExitOpen] = useState(false);
+
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
@@ -61,18 +61,7 @@ export function Funnel({ etapa }: { etapa: Etapa }) {
     if (qIndex >= 0) track("quiz_step_view", { step: qIndex + 1 });
   }, [qIndex]);
 
-  // Caixa de saída: uma vez por sessão, após 2 respostas, sem sequestrar o Voltar.
-  useEffect(() => {
-    if (qIndex < 0 || Object.keys(answers).length < 2 || exitPromptShown()) return;
-    const onOut = (e: MouseEvent) => {
-      if (!e.relatedTarget && e.clientY <= 0 && !exitPromptShown()) {
-        markExitPromptShown();
-        setExitOpen(true);
-      }
-    };
-    document.addEventListener("mouseout", onOut);
-    return () => document.removeEventListener("mouseout", onOut);
-  }, [qIndex, answers]);
+  useEffect(() => () => clearTimeout(timer.current), []);
 
   const handleSelect = (optionId: string) => {
     if (locked) return;
@@ -94,7 +83,7 @@ export function Funnel({ etapa }: { etapa: Etapa }) {
       if (q.insight) {
         const index = questions.filter((x, i) => x.insight && i <= qIndex).length;
         track("quiz_insight_view", { index });
-        setInsight({ text: q.insight, index, next: nextEtapa });
+        setInsight({ text: getInsight(q.id, optionId, q.insight), index, next: nextEtapa });
       } else go(nextEtapa);
     }, 380);
   };
@@ -132,7 +121,6 @@ export function Funnel({ etapa }: { etapa: Etapa }) {
             />
           )}
         </main>
-        {exitOpen && <ExitPrompt onClose={() => setExitOpen(false)} />}
       </>
     );
   }

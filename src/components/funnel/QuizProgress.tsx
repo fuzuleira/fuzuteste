@@ -1,5 +1,5 @@
-import { ArrowLeft } from "lucide-react";
-
+import { ArrowLeft, LockKeyhole } from "lucide-react";
+import { Brand } from "./Brand";
 export function QuizProgress({
   current,
   total,
@@ -9,45 +9,48 @@ export function QuizProgress({
   total: number;
   onBack: () => void;
 }) {
-  const pct = Math.round((current / total) * 100);
-  const remaining = total - current;
+  const pct = Math.round(((current - 1) / total) * 100);
   return (
-    <div className="sticky top-0 z-30 border-b border-border/80 bg-background/90 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-[720px] items-center gap-3 px-3 py-2.5 sm:px-5">
-        <button
-          type="button"
-          onClick={onBack}
-          className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-xl px-2 font-bold text-primary transition-colors hover:bg-secondary"
+    <header className="ci-quiz-header">
+      <div className="ci-header">
+        <Brand />
+        <span className="ci-header-note">
+          <LockKeyhole size={14} /> Sua rotina, seu ritmo
+        </span>
+      </div>
+      <div className="ci-progress-wrap">
+        <div className="ci-progress-top">
+          <button onClick={onBack} aria-label="Voltar à etapa anterior">
+            <ArrowLeft size={19} />
+          </button>
+          <span>
+            {current <= 2
+              ? "01 · SUA ROTINA"
+              : current <= 5
+                ? "02 · SEUS OBSTÁCULOS"
+                : "03 · SEU PRÓXIMO PASSO"}
+          </span>
+          <b>
+            {current}
+            <small> / {total}</small>
+          </b>
+        </div>
+        <div
+          className="ci-progress"
+          role="progressbar"
+          aria-label="Perguntas respondidas"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={pct}
         >
-          <ArrowLeft className="size-5" aria-hidden /> Voltar
-        </button>
-        <div className="flex-1">
-          <div
-            className="flex items-center justify-between gap-3 text-xs font-bold sm:text-sm"
-            aria-live="polite"
-          >
-            <span className="text-primary">
-              Etapa {current} de {total}
-            </span>
-            <span className="text-muted-foreground">
-              {remaining === 0 ? "última pergunta" : `faltam ${remaining}`}
-            </span>
-          </div>
-          <div
-            className="mt-1.5 h-2.5 overflow-hidden rounded-full bg-secondary ring-1 ring-primary/5"
-            role="progressbar"
-            aria-label="Progresso do quiz"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={pct}
-          >
-            <div
-              className="progress-glow h-full rounded-full bg-leaf transition-[width] duration-500"
-              style={{ width: `${pct}%` }}
-            />
-          </div>
+          <span style={{ width: `${pct}%` }} />
+        </div>
+        <div className="ci-milestones">
+          <span className="active">Entender</span>
+          <span className={current > 2 ? "active" : ""}>Simplificar</span>
+          <span className={current > 5 ? "active" : ""}>Começar</span>
         </div>
       </div>
-    </div>
+    </header>
   );
 }

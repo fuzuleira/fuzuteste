@@ -1,6 +1,6 @@
 import type { Answers } from "./scoring";
 
-const KEY = "ci_quiz_v1";
+const KEY = "ci_quiz_v2";
 const EXIT_KEY = "ci_exit_prompt_shown";
 
 export function loadAnswers(): Answers {

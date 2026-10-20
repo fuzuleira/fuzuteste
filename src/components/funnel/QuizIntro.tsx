@@ -1,14 +1,5 @@
-import {
-  ArrowRight,
-  Check,
-  ClipboardList,
-  Clock,
-  ShieldCheck,
-  Sparkles,
-  Sprout,
-} from "lucide-react";
-import { btnCta, Eyebrow } from "./ui";
-
+import { ArrowRight, Clock3, Check, ShieldCheck } from "lucide-react";
+import { Brand } from "./Brand";
 export function QuizIntro({
   onStart,
   hasProgress,
@@ -19,73 +10,87 @@ export function QuizIntro({
   onResume: () => void;
 }) {
   return (
-    <section className="intro-stage animate-step relative mx-auto flex min-h-[100dvh] max-w-[760px] flex-col items-start justify-center overflow-hidden px-4 pb-10 pt-7 sm:min-h-0 sm:px-5 sm:py-16">
-      <Sparkles
-        className="absolute right-2 top-16 size-28 text-highlight/10 sm:right-0"
-        aria-hidden
-      />
-      <div className="mb-6 flex items-center gap-2 font-display text-lg font-bold text-primary sm:mb-8">
-        <span className="grid size-9 place-items-center rounded-lg bg-primary text-primary-foreground">
-          <Sprout className="size-5" aria-hidden />
+    <div className="ci-home">
+      <header className="ci-header">
+        <Brand />
+        <span className="ci-header-note">
+          <Clock3 size={15} /> Seu primeiro passo em 1 minuto
         </span>
-        Cardápio Inteligente
-      </div>
-      <Eyebrow>
-        <Clock className="size-4" aria-hidden /> Diagnóstico de rotina alimentar, leva cerca de 90
-        segundos
-      </Eyebrow>
-      <h1 className="mt-4 text-[2rem] font-bold leading-[1.06] text-foreground sm:mt-5 sm:text-5xl">
-        Em que ponto o <span className="text-cta">improviso</span> está desmontando sua semana?
-      </h1>
-      <p className="mt-4 max-w-[60ch] text-[1.02rem] text-muted-foreground sm:mt-5 sm:text-lg">
-        Responda sete perguntas e descubra qual ajuste pode deixar seus próximos almoços, jantares e
-        compras mais fáceis de executar.
-      </p>
-
-      <ol
-        className="mt-6 grid w-full grid-cols-3 gap-2 text-center text-[0.68rem] font-bold text-primary sm:text-sm"
-        aria-label="Como funciona"
-      >
-        {["7 perguntas", "perfil revelado", "primeiro passo"].map((t, index) => (
-          <li
-            key={t}
-            className="relative rounded-2xl border border-border bg-card px-2 py-3 shadow-card"
-          >
-            <span className="mx-auto mb-1.5 grid size-6 place-items-center rounded-full bg-secondary text-xs">
-              {index + 1}
+      </header>
+      <section className="ci-hero">
+        <div className="ci-hero-copy">
+          <div className="ci-kicker">
+            <span /> MENOS IMPROVISO. MAIS DIREÇÃO.
+          </div>
+          <h1>
+            A fome chega.
+            <br />O cansaço também.
+            <br />
+            <em>E o seu plano?</em>
+          </h1>
+          <p className="ci-lead">
+            Pare de começar cada refeição do zero. Descubra o que trava sua rotina e por onde
+            começar a mudar.
+          </p>
+          <div className="ci-chips">
+            <span>
+              <Check size={16} /> Comida de verdade
             </span>
-            {t}
-          </li>
-        ))}
-      </ol>
-
-      <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-        <button
-          type="button"
-          onClick={onStart}
-          className={`${btnCta} cta-shine w-full text-lg sm:w-auto`}
-        >
-          <ClipboardList className="size-5" aria-hidden />
-          Começar meu diagnóstico
-          <ArrowRight className="size-5" aria-hidden />
-        </button>
-        {hasProgress && (
-          <button
-            type="button"
-            onClick={onResume}
-            className="min-h-12 rounded-xl px-4 font-bold text-primary underline underline-offset-4"
-          >
-            Continuar de onde parei
+            <span>
+              <Check size={16} /> Sem complicação
+            </span>
+          </div>
+          <button className="ci-button" onClick={onStart}>
+            Quero sair do improviso <ArrowRight size={20} />
           </button>
-        )}
-      </div>
-      <p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-        <ShieldCheck className="size-4 text-success" aria-hidden />
-        Sem informar peso, medidas ou condição de saúde.
-      </p>
-      <p className="mt-2 flex items-center gap-2 text-xs font-semibold text-primary">
-        <Check className="size-4" aria-hidden /> Respostas salvas enquanto você avança
-      </p>
-    </section>
+          <p className="ci-micro">7 perguntas rápidas · Sem cadastro</p>
+          {hasProgress && (
+            <button className="ci-resume" onClick={onResume}>
+              Continuar de onde parei →
+            </button>
+          )}
+          <div className="ci-trust">
+            <ShieldCheck size={19} />
+            <span>
+              Suas respostas ficam apenas nesta sessão.
+              <br />
+              Um primeiro passo que respeita a sua rotina.
+            </span>
+          </div>
+        </div>
+        <div className="ci-hero-visual">
+          <img
+            src="/images/meal.jpg"
+            alt="Prato com cereais, vegetais e proteína"
+            fetchPriority="high"
+          />
+          <div className="ci-photo-label">
+            <span className="ci-small-dot" /> A próxima refeição pode ter um plano.
+          </div>
+          <div className="ci-week-card">
+            <span className="ci-kicker">SUA PRÓXIMA SEMANA</span>
+            <strong>
+              Decidir antes.
+              <br />
+              Respirar depois.
+            </strong>
+            <div className="ci-week-days">
+              {"STQQSSD".split("").map((d, i) => (
+                <span key={i} className={i < 3 ? "done" : ""}>
+                  {i < 3 ? <Check size={13} /> : d}
+                </span>
+              ))}
+            </div>
+            <small>Um dia de cada vez. Um plano para seguir.</small>
+          </div>
+        </div>
+      </section>
+      <footer className="ci-home-footer">
+        <span>ROTINA REAL. COMIDA SIMPLES.</span>
+        <p>
+          Planejamento culinário geral. Não é dieta personalizada nem promessa de emagrecimento.
+        </p>
+      </footer>
+    </div>
   );
 }
