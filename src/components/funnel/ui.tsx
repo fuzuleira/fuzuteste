@@ -1,7 +1,7 @@
-import type { AnchorHTMLAttributes, ReactNode } from "react";
+import { useEffect, useState, type AnchorHTMLAttributes, type ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 import { getProductHref, isFilled, funnelConfig } from "@/config/funnel";
-import { track } from "@/lib/analytics";
+import { track, getCheckoutHref } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 export const btnBase =
@@ -34,12 +34,16 @@ interface CtaProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href">
 
 /** Todos os CTAs de compra usam funnelConfig.productUrl. */
 export function BuyCta({ label, location, full = true, className, ...rest }: CtaProps) {
-  const href = getProductHref();
+  const [href, setHref] = useState(getProductHref);
+  useEffect(() => {
+    setHref(getCheckoutHref());
+  }, []);
   const external = isFilled(funnelConfig.productUrl);
   return (
     <a
       href={href}
-      onClick={() => {
+      onClick={(event) => {
+        event.currentTarget.href = getCheckoutHref();
         track("cta_click", { location, label });
         if (external) {
           try {

@@ -6,6 +6,8 @@
 export const funnelConfig = {
   productName: "Cardápio Inteligente para 30 Dias",
   price: "R$ 19,90",
+  /** ID público; nunca inserir tokens da API de Conversões no frontend. */
+  metaPixelId: "1773375323917983",
   previousPrice: "R$ 49,90",
   showPreviousPrice: false,
   productUrl: "https://pay.hub.la/71OyYqttZWiebUNXMiCZ",

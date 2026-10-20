@@ -58,8 +58,8 @@ export function Funnel({ etapa }: { etapa: Etapa }) {
     setInsight(null);
     setLocked(false);
     clearTimeout(timer.current);
-    if (qIndex >= 0) track("quiz_step_view", { step: qIndex + 1 });
-  }, [qIndex]);
+    if (hydrated && qIndex >= 0) track("quiz_step_view", { step: qIndex + 1 });
+  }, [qIndex, hydrated]);
 
   useEffect(() => () => clearTimeout(timer.current), []);
 

@@ -15,13 +15,14 @@ import { track } from "@/lib/analytics";
 import { Brand } from "./Brand";
 import { BuyCta } from "./ui";
 import { Footer } from "./Footer";
+import { useSectionView } from "./useSectionView";
 export function QuizResult({ answers }: { answers: Answers }) {
   const key = getProfile(answers);
   const p = profiles[key];
   const factors = getFactors(answers, key);
+  const offerRef = useSectionView<HTMLElement>("offer", "offer_view");
   useEffect(() => {
     track("quiz_result_view", { profile: key });
-    track("offer_view");
   }, [key]);
   return (
     <>
@@ -53,7 +54,7 @@ export function QuizResult({ answers }: { answers: Answers }) {
           </a>
           <small>Leitura das suas respostas sobre rotina. Não é uma avaliação nutricional.</small>
         </section>
-        <section id="oferta" className="ci-offer">
+        <section id="oferta" className="ci-offer" ref={offerRef}>
           <div className="ci-offer-product">
             <div className="ci-kicker">UM MÊS DE IDEIAS. COMECE COM SETE DIAS.</div>
             <div className="ci-book">
